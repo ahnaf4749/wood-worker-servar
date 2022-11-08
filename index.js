@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 require('dotenv').config();
 
@@ -20,11 +20,23 @@ async function run() {
     try {
         const seviceCullection = client.db('woodWorker').collection('services');
 
-        app.get('/services', async (req, res) => {
+        app.get('/limitservices', async (req, res) => {
             const query = {}
             const cursor = seviceCullection.find(query);
             const services = await cursor.limit(3).toArray();
             res.send(services);
+        })
+        app.get('/services', async (req, res) => {
+            const query = {}
+            const cursor = seviceCullection.find(query);
+            const services = await cursor.toArray();
+            res.send(services);
+        })
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const service = await seviceCullection.findOne(query);
+            res.send(service);
         })
     }
     finally {
