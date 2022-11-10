@@ -43,7 +43,8 @@ async function run() {
 
 
 
-        app.get('/reviews', async (req, res) => {
+
+        app.get('/myreviews', async (req, res) => {
             let query = {}
             if (req.query.email) {
                 query = {
@@ -55,8 +56,7 @@ async function run() {
             res.send(orders)
         })
 
-
-        app.get('/reviews', async (req, res) => {
+        app.get('/serviceReviews', async (req, res) => {
             let query = {}
             if (req.query.service) {
                 query = {
@@ -64,11 +64,9 @@ async function run() {
                 }
             };
             const cursor = reviewCollection.find(query)
-            const orders = await cursor.toArray();
-            res.send(orders)
+            const result = await cursor.toArray();
+            res.send(result)
         })
-
-
 
         app.post('/reviews', async (req, res) => {
             const review = req.body;
@@ -76,12 +74,7 @@ async function run() {
             res.send(result);
         })
 
-        // app.get('/reviews', async (req, res) => {
-        //     const query = {}
-        //     const cursor = reviewCollection.find(query);
-        //     const result = await cursor.toArray();
-        //     res.send(result);
-        // })
+
         app.delete('/reviews/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
